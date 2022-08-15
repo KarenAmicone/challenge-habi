@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Hero from "./components/molecules/hero/hero";
+import Results from "./components/organisms/results/results";
+import Wizard from "./pages/wizard";
+import { steps } from "./utils/steps";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	let navigate = useNavigate();
+	const currentStep = localStorage.getItem("currentStep");
+	useEffect(() => {
+		currentStep ? navigate(`/${currentStep}`) : navigate("/");
+		// eslint-disable-next-line
+	}, []);
+
+	return (
+		<Routes>
+			<Route path="/" element={<Hero />} />
+			{steps.map((step) => (
+				<Route
+					key={step.order}
+					path={step.path}
+					element={<Wizard step={step} />}
+				/>
+			))}
+			<Route path="/resultados" element={<Results />} />
+		</Routes>
+	);
 }
 
 export default App;
